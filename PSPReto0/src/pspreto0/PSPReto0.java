@@ -34,7 +34,7 @@ public class PSPReto0 {
     // Método para crear la ventana principal (padre)
     public static void crearVentanaPadre() {
         JFrame ventanaPadre = new JFrame("Gestor de Procesos del Sistema");
-        ventanaPadre.setSize(600, 500);
+        ventanaPadre.setSize(600, 600);
         ventanaPadre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventanaPadre.setLayout(new BorderLayout(10, 10));
         ventanaPadre.getContentPane().setBackground(new Color(230, 240, 255)); // Fondo suave
@@ -85,15 +85,14 @@ public class PSPReto0 {
                         String pid = partes[0];  // El PID está al principio
 
                         // Ejecutar comando kill en Linux o taskkill en Windows
-                        String comandoKill = esWindows() 
-                                ? "taskkill /PID " + pid + " /F" 
-                                : "kill -9 " + pid;
+                        String comandoKill = "taskkill /PID " + pid + " /F" ;
 
                         Process proceso = Runtime.getRuntime().exec(comandoKill);
                         proceso.waitFor();
 
                         JOptionPane.showMessageDialog(ventanaPadre, "Proceso con PID " + pid + " finalizado.");
                         model.removeElement(procesoSeleccionado);
+                        cargarProcesos(model);
 
                     } catch (Exception ex) {
                         ex.printStackTrace();
@@ -102,6 +101,7 @@ public class PSPReto0 {
                 } else {
                     JOptionPane.showMessageDialog(ventanaPadre, "Por favor, selecciona un proceso.");
                 }
+
             }
         });
 
@@ -188,17 +188,12 @@ public class PSPReto0 {
         }
     }
 
-    // Método para determinar si el sistema operativo es Windows
-    private static boolean esWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("win");
-    }
+  
 
     // Método para cargar la lista de procesos del sistema
     private static void cargarProcesos(DefaultListModel<String> model) {
         try {
-            String comandoListar = esWindows() 
-                    ? "tasklist" 
-                    : "ps -e";
+            String comandoListar =  "tasklist" ;
 
             Process proceso = Runtime.getRuntime().exec(comandoListar);
             BufferedReader reader = new BufferedReader(new InputStreamReader(proceso.getInputStream()));
